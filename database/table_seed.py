@@ -46,3 +46,5 @@ for query in table_seed_queries:
 db_con.commit()
 cursor.close()
 db_con.close()
+
+print('Berhasil seeding table')
