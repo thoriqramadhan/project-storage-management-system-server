@@ -3,8 +3,8 @@ import json
 
 SERVER_IP: str = '127.0.0.1'
 SERVER_PORT: int = 5000
-# SERVER_IP: str = 'vgequ-182-253-161-60.run.pinggy-free.link'
-# SERVER_PORT: int = 46137
+# SERVER_IP: str = 'zgcfn-182-253-161-60.run.pinggy-free.link'
+# SERVER_PORT: int = 43555
 BUFFER_SIZE: int = 4096
 
 

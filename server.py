@@ -17,10 +17,16 @@ def client_handler(client_socket: socket.socket , client_address: tuple[str, int
 
     client_ip, client_port = client_address
 
+    try:
+        hostname = socket.gethostbyaddr(client_ip)[0]
+        print(socket.gethostbyaddr(client_ip)[0])
+    except socket.herror:
+        hostname = 'Unknown-Host'
     print(
         f"\n[+] [THREAD BARU] Terhubung dengan: {client_ip}:{client_port} "
         f"(Total Thread A ktif: {threading.active_count() - 1})"
     )
+    print(hostname)
 
     try : 
         while True:
@@ -35,9 +41,9 @@ def client_handler(client_socket: socket.socket , client_address: tuple[str, int
             try:
                 print()
                 request_data = json.loads(client_message)
-                response = process_request(request_data)
+                response = process_request(request_data, client_ip , hostname)
                 if response.get('status'):
-                    client_socket.sendall(general_response('sucess' , 'berhasil membuat request' , response.get('datas')))
+                    client_socket.sendall(general_response('sucess' , response.get('messages') or 'berhasil membuat request' , response.get('datas')))
             except json.JSONDecodeError:
                 error_response = {
                     "status": "ERROR",

@@ -32,10 +32,10 @@ table_seed_queries = [
     """
         create table if not exists access_logs (
             id int auto_increment primary key,
-            client_ip int not null,
+            client_ip varchar(45) not null,
             client_hostname varchar(250) not null,
             action_performed varchar(250) not null,
-            created_at timestamp not null
+            created_at timestamp default current_timestamp not null
         )    
     """
 ]

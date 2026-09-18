@@ -7,4 +7,4 @@ def general_response(status:Status , message:str , data: dict[str, Any]):
         "status": status ,
         "message": message,
         "data": data
-    }).encode('utf-8')
+    }, default=str).encode('utf-8')
