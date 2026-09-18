@@ -1,7 +1,10 @@
 import socket
 import threading
+import json
 import os
+from services.process_request import process_request
 from dotenv import load_dotenv
+from utils.response_format import general_response
 
 load_dotenv()
 
@@ -29,7 +32,20 @@ def client_handler(client_socket: socket.socket , client_address: tuple[str, int
                 break
 
             client_message = raw_bytes.decode('utf-8')
-            print(f'CLIENT MESSAGES {client_ip}:{client_message}')
+            try:
+                print()
+                request_data = json.loads(client_message)
+                response = process_request(request_data)
+                if response.get('status'):
+                    client_socket.sendall(general_response('sucess' , 'berhasil membuat request' , response.get('datas')))
+            except json.JSONDecodeError:
+                error_response = {
+                    "status": "ERROR",
+                    "messages": "Payload must be valid json",
+                    "data" : None
+                }
+                client_socket.sendall(json.dumps(error_response).encode('utf-8'))
+            # print(f'CLIENT MESSAGES {client_ip}:{client_message}')
 
             response = f"server accept request : {client_message}"
 
