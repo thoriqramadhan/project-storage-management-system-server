@@ -26,8 +26,6 @@ def client_handler(client_socket: socket.socket , client_address: tuple[str, int
         f"\n[+] [THREAD BARU] Terhubung dengan: {client_ip}:{client_port} "
         f"(Total Thread A ktif: {threading.active_count() - 1})"
     )
-    print(hostname)
-
     try : 
         while True:
             # read client data raw (blocking)
