@@ -42,6 +42,9 @@ def process_request(request_payload : dict[str , Any] , client_ip: int, hostname
         case 'EDIT_RACK':
             print('called edit rack')
             result = edit_rack(payload.get('rack_id'), payload.get('name'))
+        case 'GET_ACCESS_LOGS':
+            print('called get access logs')
+            result = get_access_logs()
     print(F'ACTION : {action}\n')
     print(F'PAYLOAD : {payload}\n')
     print(F'RESULT : {result}')
@@ -171,6 +174,20 @@ def edit_rack(rack_id, name):
         return {
                     'status': False,
                 }
+
+def get_access_logs():
+    try:
+        cursor.execute('select id, client_ip, client_hostname, action_performed, created_at from access_logs order by created_at desc')
+        return {
+            'status': True,
+            'datas': cursor.fetchall(),
+            'messages': 'Berhasil mengambil data access logs'
+        }
+    except Exception as e:
+        print(f'Error on get access logs : {e}') 
+        return {
+            'status': False,
+        }
         
 def add_item(category_id , rack_id , name , stock):
     try:
