@@ -2,7 +2,7 @@ from typing import Any
 import database.db_connection
 
 db_con = database.db_connection.db_con
-cursor = db_con.cursor()
+cursor = db_con.cursor(dictionary=True)
 def process_request(request_payload : dict[str , Any] , client_ip: int, hostname:str)-> dict[str , Any]: 
     action = request_payload.get('action')
     payload = request_payload.get('payload')
@@ -14,7 +14,7 @@ def process_request(request_payload : dict[str , Any] , client_ip: int, hostname
         case 'ADD_ITEMS':
             print('called add items')
             print(f'rackId:{payload.get('rack_id')} , category_id:{payload.get('category_id')}')
-            result = add_item(payload.get('category_id') ,payload.get('rack_id') , payload.get('name') , payload.get('quantity') )
+            result = add_item(payload.get('category_id') ,payload.get('rack_id') , payload.get('name') , payload.get('stock') )
         case 'UPDATE_STOCKS':
             print('UPDATE_STOCKS')
             result = update_item(payload.get('category_id') ,payload.get('rack_id') , payload.get('name') , payload.get('stock') , payload.get('item_id'))
@@ -66,7 +66,7 @@ def access_logs(client_ip: int, hostname:str, action: str):
 
 def check_stocks():
     try:
-        cursor.execute('select id , name , stock, updated_at from items') 
+        cursor.execute('select items.id , items.name , items.stock, items.rack_id , items.category_id , categories.name as category_name , rack.name as rack_name, items.updated_at from items left join categories on items.category_id = categories.id left join rack on items.rack_id = rack.id') 
         return {
                 'status': True,
                 'datas': cursor.fetchall(),
@@ -80,7 +80,8 @@ def check_stocks():
 
 def add_category(name:str):
     try:
-        cursor.execute('insert into categories (name) values (%s)', (name))
+        print(name)
+        cursor.execute('insert into categories (name) values (%s)', (name,))
         db_con.commit()
         inserted_id = cursor.lastrowid
         return {
@@ -98,8 +99,9 @@ def add_category(name:str):
                     'status': False,
                 }
 def add_rack(name:str):
+    print(name)
     try:
-        cursor.execute('insert into rack (name) values (%s)', (name))
+        cursor.execute('insert into rack (name) values (%s)', (name,))
         db_con.commit()
         inserted_id = cursor.lastrowid
         return {

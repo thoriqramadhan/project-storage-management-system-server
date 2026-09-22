@@ -49,11 +49,11 @@ def client_handler(client_socket: socket.socket , client_address: tuple[str, int
                     "data" : None
                 }
                 client_socket.sendall(json.dumps(error_response).encode('utf-8'))
-            # print(f'CLIENT MESSAGES {client_ip}:{client_message}')
+            print(f'CLIENT MESSAGES {client_ip}:{client_message}')
 
-            response = f"server accept request : {client_message}"
+            # response = f"server accept request : {client_message}"
 
-            client_socket.sendall(response.encode('utf-8')) 
+            # client_socket.sendall(response.encode('utf-8')) 
     except ConnectionResetError:
     # handle client force close connection
         print(f'Client force quit {client_ip}:{client_port}')
