@@ -42,6 +42,12 @@ def process_request(request_payload : dict[str , Any] , client_ip: int, hostname
         case 'EDIT_RACK':
             print('called edit rack')
             result = edit_rack(payload.get('rack_id'), payload.get('name'))
+        case 'DELETE_CATEGORY':
+            print('called delete category')
+            result = delete_category(payload.get('category_id'))
+        case 'DELETE_RACK':
+            print('called delete rack')
+            result = delete_rack(payload.get('rack_id'))
         case 'GET_ACCESS_LOGS':
             print('called get access logs')
             result = get_access_logs()
@@ -172,6 +178,36 @@ def edit_rack(rack_id, name):
         }
     except Exception as e:
         print(f'Error on editing rack : {e}')
+        db_con.rollback()
+        return {
+                    'status': False,
+                }
+
+def delete_category(category_id):
+    try:
+        cursor.execute('delete from categories where id = %s', (category_id,))
+        db_con.commit()
+        return {
+            'status' : True,
+            'messages' : 'Kategori berhasil dihapus'
+        }
+    except Exception as e:
+        print(f'Error on deleting category : {e}')
+        db_con.rollback()
+        return {
+                    'status': False,
+                }
+
+def delete_rack(rack_id):
+    try:
+        cursor.execute('delete from rack where id = %s', (rack_id,))
+        db_con.commit()
+        return {
+            'status' : True,
+            'messages' : 'Rak berhasil dihapus'
+        }
+    except Exception as e:
+        print(f'Error on deleting rack : {e}')
         db_con.rollback()
         return {
                     'status': False,
