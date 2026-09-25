@@ -41,7 +41,11 @@ def client_handler(client_socket: socket.socket , client_address: tuple[str, int
                 request_data = json.loads(client_message)
                 response = process_request(request_data, client_ip , hostname)
                 if response.get('status'):
+                    print('MENGIRIM berhasil KEMBALI KE CLIENT')
                     client_socket.sendall(general_response('sucess' , response.get('messages') or 'berhasil membuat request' , response.get('datas')))
+                else :
+                    print('MENGIRIM gagal KEMBALI KE CLIENT')
+                    client_socket.sendall(general_response('false' , response.get('messages') or 'gagal membuat request' , response.get('datas')))
             except json.JSONDecodeError:
                 error_response = {
                     "status": "ERROR",
